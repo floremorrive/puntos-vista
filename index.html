@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puntos de Vista — La Tribuna</title>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="cab">
+    <h1>Puntos de Vista</h1>
+    <span>La Tribuna</span>
+  </header>
+
+  <main class="cont">
+    <section class="panel">
+      <div class="campo">
+        <label for="autor">Autor</label>
+        <div class="fila">
+          <select id="autor"></select>
+          <button id="btn-agregar-autor" type="button">➕ Agregar autor nuevo</button>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="texto-roja">Texto de la imagen ROJA</label>
+        <textarea id="texto-roja" rows="4" placeholder="Escriba la cita para la versión roja. Use **doble asterisco** para negrilla."></textarea>
+        <span id="contador-roja" class="contador">0 palabras</span>
+      </div>
+
+      <div class="campo">
+        <label for="texto-blanca">Texto de la imagen BLANCA</label>
+        <textarea id="texto-blanca" rows="4" placeholder="Escriba la cita para la versión blanca. Use **doble asterisco** para negrilla."></textarea>
+        <span id="contador-blanca" class="contador">0 palabras</span>
+      </div>
+
+      <p class="ayuda">
+        Para poner palabras en <strong>NEGRILLA</strong> enciérrelas entre <code>**dobles asteriscos**</code>.
+        Ideal: 40 a 50 palabras por imagen.
+      </p>
+
+      <button id="btn-generar" class="btn-generar">GENERAR LAS 2 IMÁGENES</button>
+      <p id="estado" class="estado"></p>
+    </section>
+
+    <section class="previews">
+      <div class="preview-box">
+        <canvas id="preview-roja" width="1080" height="1350"></canvas>
+      </div>
+      <div class="preview-box">
+        <canvas id="preview-blanca" width="1080" height="1350"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <div id="modal-autor" class="modal" hidden>
+    <div class="modal-caja">
+      <h2>Agregar autor</h2>
+      <label for="nuevo-nombre">Nombre del autor (como debe aparecer)</label>
+      <input id="nuevo-nombre" type="text" maxlength="60">
+      <label for="nuevo-foto">Foto del autor (recorte, sin texto encima)</label>
+      <input id="nuevo-foto" type="file" accept="image/*">
+      <p class="ayuda">Ideal: foto cuadrada, de pecho hacia arriba, centrada. Se convierte a blanco y negro automáticamente. Se guarda en este navegador.</p>
+      <div class="modal-botones">
+        <button id="btn-cancelar-autor" type="button" class="secundario">Cancelar</button>
+        <button id="btn-guardar-autor" type="button">Guardar autor</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/authors-store.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
