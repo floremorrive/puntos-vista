@@ -290,9 +290,6 @@ function dibujarFoto(ctx, img, dx, dy, scale) {
   ctx.filter = "grayscale(1)";
   ctx.drawImage(img, x, y, w, h);
   ctx.filter = "none";
-  ctx.globalAlpha = 0.22;
-  ctx.drawImage(getMicroNoise(), x, y, w, Math.min(h, H - y), x, y, w, Math.min(h, H - y));
-  ctx.globalAlpha = 1;
   ctx.restore();
 }
 
