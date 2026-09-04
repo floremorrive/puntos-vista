@@ -358,12 +358,19 @@ function renderPuntosVista(ctx, opts) {
     dibujarFoto(ctx, opts.autorImg, opts.dx, opts.dy, opts.scale);
   }
 
-  // 3) cita: se autoajusta para terminar antes de donde empieza el nombre
+  // 3) cita: se autoajusta para terminar antes de donde empieza el nombre.
+  // Se reserva de antemano el espacio de la comilla de cierre (mas su
+  // separacion) en el ancho de ajuste de linea, para que ningun renglon
+  // -incluido el ultimo, donde va la comilla- se acerque tanto al borde
+  // que la comilla termine saliéndose del lienzo o encima del texto.
+  const closeW0 = ASSETS.quote.width * (QUOTE_CLOSE_H / ASSETS.quote.height);
+  const RESERVA_COMILLA = closeW0 + 14;
+  const anchoAjuste = cfg.boxW - RESERVA_COMILLA;
   const limiteY = FOTO_TOP - GAP_FOTO - nombreAlto - GAP_CITA;
   const altoDisponible = limiteY - cfg.boxY;
   const paragraphs = construirParrafos(opts.texto || "");
   const paras = paragraphs.length ? paragraphs : [[]];
-  const { pt, lineas } = autoajustarCita(ctx, paras, cfg.boxW, altoDisponible, CITA_MAX_PT, CITA_MIN_PT);
+  const { pt, lineas } = autoajustarCita(ctx, paras, anchoAjuste, altoDisponible, CITA_MAX_PT, CITA_MIN_PT);
   const lineHeight = pt * LINE_FACTOR;
 
   // comilla de apertura (decorativa, fija, apoyada en el margen izquierdo)
