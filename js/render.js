@@ -12,12 +12,12 @@ const CITA_MIN_PT = 44;
 const CITA_FLOOR_PT = 30; // piso de seguridad si el texto es demasiado largo
 const NAME_PT = 44;
 
-const QUOTE_OPEN_H = 96;
+const QUOTE_OPEN_H = 58;
 const QUOTE_CLOSE_H = 54;
 
 const TEMPLATES = {
   roja: {
-    boxX: 147.6, boxY: 241.1, boxW: 824.4,
+    boxX: 192.6, boxY: 241.1, boxW: 779.4,
     nameX: 719.6, nameW: 323.4,
     quoteColor: "#FFFFFF", nameColor: "#FFFFFF",
     pillFill: "#F2F2F2", pillText: "#99564D",
@@ -28,7 +28,7 @@ const TEMPLATES = {
     border: false,
   },
   blanca: {
-    boxX: 113.1, boxY: 230.0, boxW: 864.9,
+    boxX: 158.1, boxY: 230.0, boxW: 819.9,
     nameX: 658.7, nameW: 327.5,
     quoteColor: "#272624", nameColor: "#99564D",
     pillFill: "#99564D", pillText: "#FFFFFF",
@@ -373,10 +373,11 @@ function renderPuntosVista(ctx, opts) {
   const { pt, lineas } = autoajustarCita(ctx, paras, anchoAjuste, altoDisponible, CITA_MAX_PT, CITA_MIN_PT);
   const lineHeight = pt * LINE_FACTOR;
 
-  // comilla de apertura (decorativa, fija, apoyada en el margen izquierdo)
+  // comilla de apertura (decorativa, fija). Mismo tamaño y misma separacion
+  // que la de cierre, completamente dentro del lienzo (nunca en el borde).
   const openImg = imagenTeñida(ASSETS.quote, cfg.quoteMarkTint);
   const openW = openImg.width * (QUOTE_OPEN_H / openImg.height);
-  ctx.drawImage(openImg, cfg.boxX - openW + 8, cfg.boxY - QUOTE_OPEN_H * 0.42, openW, QUOTE_OPEN_H);
+  ctx.drawImage(openImg, cfg.boxX - openW - 10, cfg.boxY - QUOTE_OPEN_H * 0.42, openW, QUOTE_OPEN_H);
 
   // dibuja cada linea de la cita
   ctx.textBaseline = "alphabetic";
