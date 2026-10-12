@@ -140,3 +140,12 @@ body.solo-captura .preview-box canvas { box-shadow: none; border-radius: 0; }
   .cont { flex-direction: column; }
   .previews { order: -1; }
 }
+
+.foto-fila { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.foto-fila input[type="file"] { margin: 0; flex: 1; min-width: 0; }
+.previa { width: 64px; height: 64px; object-fit: cover; border-radius: 4px; background: #ddd; flex: none; }
+.previa[hidden] { display: none; }
+.check { display: flex; gap: 8px; align-items: center; font-weight: 600; color: var(--oscuro); margin-bottom: 6px; }
+.espacio { flex: 1; }
+.modal-botones button[hidden] { display: none; }
+button.peligro { background: #b00; }

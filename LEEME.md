@@ -21,20 +21,21 @@ El tamaño de letra de la cita se ajusta solo para que el texto nunca se
 desborde, y la comilla de cierre queda siempre pegada al final del último
 renglón.
 
-## Agregar un autor nuevo (sin tocar el código)
+## Agregar, editar o eliminar autores (sin tocar el código)
 
-Pulse **➕ Agregar autor nuevo**, escriba el nombre y elija la foto (recorte
-de pecho hacia arriba, centrado, ojalá sin fondo ni texto encima). El programa
-la convierte a blanco y negro automáticamente. El autor queda guardado en
-**este navegador** (localStorage) y aparece disponible de inmediato en la
-lista, marcado con "✎". No hace falta editar ningún archivo ni volver a
-publicar la página.
+- **➕ Agregar autor nuevo**: escriba el nombre y elija la foto.
+- **✎ Editar autor**: cambia el nombre, reemplaza la foto o quita el fondo de la
+  foto actual. También permite **Eliminar** al autor de la lista. Funciona con
+  cualquier autor, incluidos los 7 iniciales.
+- **Quitar el fondo automáticamente** (activado por defecto): si la foto trae
+  fondo, se lo quita con IA en el navegador y recorta el sobrante para que la
+  cabeza quede arriba. La primera vez descarga el modelo (puede tardar hasta un
+  minuto); luego es más rápido. Si la foto ya viene sin fondo (PNG transparente)
+  se respeta tal cual. Si la IA no puede cargar, usa un recorte básico por color.
+- La foto se convierte a blanco y negro automáticamente.
 
-Nota: como es una página estática (GitHub Pages), un autor agregado en un
-computador o navegador no aparece automáticamente en otro. Los 7 autores
-iniciales (Cesar Correa, Elías Fonseca, Jorge Enrique Robledo, Arlex Arías,
-Saulo Lizarazo, Manuel Naranjo, William López) sí vienen incluidos para todos,
-porque son parte del sitio publicado.
+Los cambios se guardan en **este navegador** (localStorage); un autor agregado o
+editado en un computador no aparece en otro.
 
 ## Estructura del proyecto
 
@@ -43,7 +44,8 @@ index.html          interfaz
 css/style.css        estilos
 js/render.js          motor de dibujo (canvas): plantillas roja/blanca,
                        negrilla, autoajuste de tamaño, comillas
-js/authors-store.js    lista de autores + guardado en localStorage
+js/authors-store.js    lista de autores, ediciones y guardado en localStorage
+js/foto.js             procesado de la foto: quitar fondo, recortar
 js/app.js              interfaz: eventos, vista previa, descarga
 assets/fonts/           Rajdhani Regular/Bold (SIL OFL)
 assets/img/             logo "La Tribuna" y comilla (recortes en blanco,

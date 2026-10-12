@@ -20,6 +20,7 @@
         <div class="fila">
           <select id="autor"></select>
           <button id="btn-agregar-autor" type="button">➕ Agregar autor nuevo</button>
+          <button id="btn-editar-autor" type="button" class="secundario">✎ Editar autor</button>
         </div>
       </div>
 
@@ -56,20 +57,28 @@
 
   <div id="modal-autor" class="modal" hidden>
     <div class="modal-caja">
-      <h2>Agregar autor</h2>
+      <h2 id="modal-titulo">Agregar autor</h2>
       <label for="nuevo-nombre">Nombre del autor (como debe aparecer)</label>
       <input id="nuevo-nombre" type="text" maxlength="60">
-      <label for="nuevo-foto">Foto del autor (recorte, sin texto encima)</label>
-      <input id="nuevo-foto" type="file" accept="image/*">
-      <p class="ayuda">Ideal: foto cuadrada, de pecho hacia arriba, centrada. Se convierte a blanco y negro automáticamente. Se guarda en este navegador.</p>
+      <label for="nuevo-foto" id="lbl-foto">Foto del autor</label>
+      <div class="foto-fila">
+        <img id="nuevo-previa" class="previa" alt="" hidden>
+        <input id="nuevo-foto" type="file" accept="image/*">
+      </div>
+      <label class="check"><input id="nuevo-quitar-fondo" type="checkbox" checked> Quitar el fondo de la foto automáticamente</label>
+      <p class="ayuda">Ideal: de pecho hacia arriba, centrada. Se convierte a blanco y negro. Si la foto ya viene sin fondo (PNG transparente) se respeta tal cual. Se guarda en este navegador.</p>
+      <p id="modal-estado" class="estado"></p>
       <div class="modal-botones">
+        <button id="btn-eliminar-autor" type="button" class="peligro" hidden>Eliminar</button>
+        <span class="espacio"></span>
         <button id="btn-cancelar-autor" type="button" class="secundario">Cancelar</button>
-        <button id="btn-guardar-autor" type="button">Guardar autor</button>
+        <button id="btn-guardar-autor" type="button">Guardar</button>
       </div>
     </div>
   </div>
 
   <script src="js/authors-store.js"></script>
+  <script src="js/foto.js"></script>
   <script src="js/render.js"></script>
   <script src="js/app.js"></script>
 </body>

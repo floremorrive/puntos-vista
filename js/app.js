@@ -44,7 +44,7 @@ function refrescarSelectAutores() {
   for (const a of state.autores) {
     const op = document.createElement("option");
     op.value = a.id;
-    op.textContent = a.nombre + (a.seed ? "" : "  ✎");
+    op.textContent = a.nombre;
     cbAutor.appendChild(op);
   }
   if (actual && state.autores.some((a) => a.id === actual)) cbAutor.value = actual;
@@ -123,43 +123,105 @@ async function generar() {
   estado.textContent = "✓ Imágenes descargadas: " + base + "_roja.png / " + base + "_blanca.png";
 }
 
-// --------------------------------------------------------- agregar autor
+// --------------------------------------------------------- agregar / editar autor
 const modal = $("#modal-autor");
+const modalTitulo = $("#modal-titulo");
 const inpNombre = $("#nuevo-nombre");
 const inpFoto = $("#nuevo-foto");
+const chkFondo = $("#nuevo-quitar-fondo");
+const imgPrevia = $("#nuevo-previa");
+const modalEstado = $("#modal-estado");
 const btnGuardarAutor = $("#btn-guardar-autor");
 const btnCancelarAutor = $("#btn-cancelar-autor");
+const btnEliminarAutor = $("#btn-eliminar-autor");
+const btnEditar = $("#btn-editar-autor");
 
-function abrirModal() {
-  inpNombre.value = "";
+let editandoId = null; // null = agregando
+
+function abrirModal(autor) {
+  editandoId = autor ? autor.id : null;
+  modalTitulo.textContent = autor ? "Editar autor" : "Agregar autor";
+  inpNombre.value = autor ? autor.nombre : "";
   inpFoto.value = "";
+  chkFondo.checked = true;
+  modalEstado.textContent = "";
+  btnEliminarAutor.hidden = !autor;
+  if (autor) { imgPrevia.src = autor.src; imgPrevia.hidden = false; }
+  else { imgPrevia.removeAttribute("src"); imgPrevia.hidden = true; }
   modal.hidden = false;
   inpNombre.focus();
 }
 function cerrarModal() { modal.hidden = true; }
 
-btnAgregar.addEventListener("click", abrirModal);
+function autorSeleccionado() {
+  return state.autores.find((a) => a.id === cbAutor.value);
+}
+
+btnAgregar.addEventListener("click", () => abrirModal(null));
+btnEditar.addEventListener("click", () => {
+  const a = autorSeleccionado();
+  if (a) abrirModal(a);
+});
 btnCancelarAutor.addEventListener("click", cerrarModal);
 modal.addEventListener("click", (e) => { if (e.target === modal) cerrarModal(); });
+
+inpFoto.addEventListener("change", () => {
+  const f = inpFoto.files[0];
+  if (!f) return;
+  imgPrevia.src = URL.createObjectURL(f);
+  imgPrevia.hidden = false;
+});
 
 btnGuardarAutor.addEventListener("click", async () => {
   const nombre = inpNombre.value.trim();
   const archivo = inpFoto.files[0];
+  const actual = editandoId ? state.autores.find((a) => a.id === editandoId) : null;
   if (!nombre) { alert("Escriba el nombre del autor."); return; }
-  if (!archivo) { alert("Seleccione una foto."); return; }
+  if (!actual && !archivo) { alert("Seleccione una foto."); return; }
+
   btnGuardarAutor.disabled = true;
+  btnEliminarAutor.disabled = true;
   try {
-    const dataURL = await fotoARecortada(archivo);
-    const nuevo = agregarAutor(nombre, dataURL);
+    // foto nueva (si eligio una) o la actual (si solo quiere quitarle el fondo)
+    let dataURL = null;
+    if (archivo || (actual && chkFondo.checked)) {
+      dataURL = await procesarFotoAutor(archivo || actual.src, {
+        quitarFondo: chkFondo.checked,
+        onEstado: (t) => { modalEstado.textContent = t; },
+      });
+    }
+    let id;
+    if (actual) {
+      const cambios = { nombre };
+      if (dataURL) cambios.src = dataURL;
+      actualizarAutor(actual.id, cambios);
+      state.imgCache.delete(actual.id);
+      id = actual.id;
+    } else {
+      id = agregarAutor(nombre, dataURL).id;
+    }
     refrescarSelectAutores();
-    cbAutor.value = nuevo.id;
+    cbAutor.value = id;
     cerrarModal();
     await repintar();
   } catch (e) {
     alert("No se pudo procesar la foto.");
     console.error(e);
   }
+  modalEstado.textContent = "";
   btnGuardarAutor.disabled = false;
+  btnEliminarAutor.disabled = false;
+});
+
+btnEliminarAutor.addEventListener("click", async () => {
+  const a = editandoId && state.autores.find((x) => x.id === editandoId);
+  if (!a) return;
+  if (!confirm("¿Eliminar a " + a.nombre + " de la lista?")) return;
+  borrarAutor(a.id);
+  state.imgCache.delete(a.id);
+  refrescarSelectAutores();
+  cerrarModal();
+  await repintar();
 });
 
 // --------------------------------------------------------- eventos
